@@ -1,0 +1,407 @@
+/* ==========================================================
+   Portfolio stylesheet
+   Dark and minimal. One font (Ubuntu Mono), one red accent.
+   Sections: 1 Settings  2 Base  3 Header  4 Navigation
+             5 Mobile menu  6 Page content  7 Icons  8 Footer
+             9 Small helpers  10 Accessibility and print
+   ========================================================== */
+
+
+/* ---------- 1. Settings: change colours and sizes here ---------- */
+:root {
+  color-scheme: dark;
+
+  --bg: #121212;            /* page background */
+  --ink: #e6e6e6;           /* main text */
+  --soft: #9a9a9a;          /* secondary text (dates, notes) */
+  --line: #2a2a2a;          /* thin divider lines */
+  --accent: #ff6b6b;        /* red: headings, nav, hover */
+  --accent-line: #e5484d;   /* link underline */
+
+  --font: 'Ubuntu Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --text: 1.0625rem;        /* body text size */
+  --small: 0.9rem;          /* dates, nav */
+  --title: 1.7rem;          /* name and page titles */
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+
+  --gutter: 1.25rem;        /* space at the left and right edge (phones) */
+  --photo: 88px;            /* photo size (phones) */
+  --measure: 44rem;         /* maximum page width, about 70 characters */
+  --section-gap: 2rem;      /* space above each section heading */
+  --row-gap: 1.25rem;       /* space between list entries */
+}
+
+/* Larger screens get a bigger photo and wider spacing */
+@media (min-width: 640px) {
+  :root {
+    --gutter: 2rem;
+    --photo: 112px;
+    --section-gap: 2.5rem;
+    --row-gap: 1.5rem;
+  }
+}
+
+
+/* ---------- 2. Base ---------- */
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;   /* stops phones from resizing text */
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 var(--text)/1.55 var(--font);
+  animation: fade-in 0.35s ease-out both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+
+/* Links: the text stays light, only the underline is coloured */
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--accent-line);
+  transition: text-decoration-color 0.2s, text-decoration-thickness 0.2s;
+}
+a:hover { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
+a:focus-visible,
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+p  { margin: 0 0 0.75rem; }
+h2 { font: 700 var(--text)/1.4 var(--font); color: var(--accent); margin: var(--section-gap) 0 var(--space-2); }
+h3 { font: 700 var(--text)/1.4 var(--font); margin: 0 0 0.1rem; }
+
+.meta { color: var(--soft); font-size: var(--small); }
+
+/* Header, main and footer share the same width and side spacing.
+   max() keeps the text clear of the notch on phones. */
+.wrap,
+main,
+footer {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding-left: max(var(--gutter), env(safe-area-inset-left));
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
+}
+
+
+/* ---------- 3. Header: photo, name and navigation ---------- */
+.site {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "photo name"
+    "photo nav";
+  column-gap: var(--space-2);
+  align-items: center;
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-3);
+}
+
+.photo {
+  grid-area: photo;
+  width: var(--photo);
+  height: var(--photo);
+  object-fit: cover;
+  display: block;
+  background: var(--line);
+}
+
+.name {
+  grid-area: name;
+  align-self: end;
+  margin: 0;
+  font: 700 var(--title)/1.2 var(--font);
+}
+.name a { color: var(--ink); text-decoration: none; }
+.name a:hover { color: var(--accent); }
+
+
+/* ---------- 4. Navigation (header and footer) ---------- */
+.site nav {
+  grid-area: nav;
+  align-self: start;
+  margin-top: 0.25rem;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+nav li { display: flex; align-items: center; }
+
+/* small dotted divider between items */
+nav li + li::before {
+  content: "";
+  height: 0.9em;
+  border-left: 1px dotted var(--soft);
+}
+
+nav a {
+  display: block;
+  padding: 0.3rem var(--space-2) 0.3rem 0;
+  font-size: var(--small);
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+nav li + li a { padding-left: 0.75rem; }
+
+/* Nav icons: the bottom edge of every icon sits on the same line
+   as the bottom of the label text (the baseline). */
+nav .icon {
+  width: 1.05em;
+  height: 1.05em;
+  margin-right: 0.4rem;
+  vertical-align: -0.0875em;
+}
+
+/* An underline grows below the label on hover; the current page keeps it */
+.label {
+  padding-bottom: 0.2rem;
+  background: linear-gradient(currentColor, currentColor) no-repeat left bottom / 0 2px;
+  transition: background-size 0.2s ease-out;
+}
+nav a:hover,
+nav a:focus-visible { color: var(--ink); }
+nav a:hover .label,
+nav a:focus-visible .label,
+nav a[aria-current] .label { background-size: 100% 2px; }
+nav a[aria-current] { color: var(--ink); }
+nav a[aria-current] .label { background-image: linear-gradient(var(--accent), var(--accent)); }
+
+/* "Get resume" button, pushed to the right end of the nav bar */
+nav li.nav-cta { margin-left: auto; padding-left: var(--space-2); }
+nav li.nav-cta::before { display: none; }
+nav .btn {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  transition: background-color 0.2s, color 0.2s;
+}
+nav .btn .label { padding: 0; background: none; }
+nav .btn:hover,
+nav .btn:focus-visible { background: var(--accent); color: var(--bg); }
+
+
+/* ---------- 5. Mobile menu (phones, up to 600px wide) ---------- */
+/* The menu button is hidden on large screens */
+.menu-btn {
+  grid-area: btn;
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -0.6rem;      /* lines the icon up with the page edge */
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--ink);
+  cursor: pointer;
+}
+.menu-btn:hover { color: var(--accent); }
+.menu-btn svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.menu-btn .i-close { display: none; }
+.menu-btn[aria-expanded="true"] .i-close { display: inline; }
+.menu-btn[aria-expanded="true"] .i-open  { display: none; }
+
+@media (max-width: 600px) {
+  :root { --title: 1.25rem; }
+
+  /* photo and name on the first row, menu button on the right, nav below */
+  .site {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "photo name btn"
+      "nav   nav  nav";
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-2);
+  }
+  .name { align-self: center; }
+  .site nav { margin-top: var(--space-2); }
+  nav a { padding: 0.5rem var(--space-2) 0.5rem 0; }
+
+  /* With JavaScript: show the button and keep the nav closed until it is tapped.
+     (Without JavaScript the nav simply stays visible.) */
+  .js .menu-btn { display: grid; }
+  .js .site nav { display: none; }
+  .js .site nav.open { display: block; margin-top: var(--space-1); border-top: 1px solid var(--line); }
+
+  /* Open menu: one big tappable row per page */
+  .js .site nav ul { flex-direction: column; align-items: stretch; }
+  .js .site nav li { display: block; }
+  .js .site nav li + li::before { display: none; }
+  .js .site nav a,
+  .js .site nav li + li a {
+    padding: 0.85rem 0;
+    font-size: var(--text);
+    border-bottom: 1px solid var(--line);
+  }
+  .js .site nav li.nav-cta { margin: var(--space-2) 0 var(--space-1); padding: 0; }
+  .js .site nav .btn { padding: 0.85rem 0; text-align: center; border: 1px solid var(--accent); }
+}
+
+
+/* ---------- 6. Page content ---------- */
+main { padding-top: 0; padding-bottom: var(--space-2); }
+
+main > h1 {
+  font: 700 var(--title)/1.2 var(--font);
+  color: var(--accent);
+  margin: 0 0 var(--space-3);
+}
+
+.row { margin: 0 0 var(--row-gap); }
+.row p { margin: 0 0 0.25rem; }
+
+/* Skills: label on the left, values on the right */
+.skills {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.1rem var(--space-2);
+  margin: 0 0 var(--space-1);
+}
+.skills dt { color: var(--soft); }
+.skills dd { margin: 0; }
+
+/* Justified text on wider screens only (narrow columns stay left-aligned) */
+@media (min-width: 640px) {
+  main p { text-align: justify; text-justify: inter-word; hyphens: auto; }
+}
+
+/* ---------- 7. Icons (drawn with CSS, so the HTML stays short) ---------- */
+/* Every .icon is a 1em square filled with the current text colour.
+   Add a second class to pick the shape, e.g. class="icon icon-github". */
+.icon,
+.row a[href^="http"]::after {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+
+/* Small arrow after project links that open another website */
+.row a[href^="http"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7M8 7h9v9'/%3E%3C/svg%3E"); }
+.row a[href^="http"]::after { width: 0.7em; height: 0.7em; margin-left: 0.35em; }
+.icon-github { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E"); }
+.icon-linkedin { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/%3E%3C/svg%3E"); }
+.icon-youtube { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z'/%3E%3C/svg%3E"); }
+.icon-email { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M2 4h20a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm1.5 2.2v.4l8.5 6.4 8.5-6.4v-.4z'/%3E%3C/svg%3E"); }
+.icon-home { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11l9-8 9 8M5 10v11h5v-6h4v6h5V10'/%3E%3C/svg%3E"); }
+.icon-about { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c0-4 4-6 8-6s8 2 8 6'/%3E%3C/svg%3E"); }
+.icon-trophy { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3'/%3E%3C/svg%3E"); }
+.icon-download { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v12M7 11l5 5 5-5M5 21h14'/%3E%3C/svg%3E"); }
+
+/* Social icon rows: "Find me on" (home page) and the footer */
+.find {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 0.6rem;
+  margin: 0 0 var(--space-2);
+  color: var(--soft);
+}
+.social {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.social a {
+  display: block;
+  line-height: 0;
+  padding: 0.75rem 0.4rem;     /* big enough to tap with a thumb */
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.social a:hover,
+.social a:focus-visible { color: var(--accent); }
+.social .icon { width: 16px; height: 16px; }
+
+/* Home page wording: icon, icon, and icon. */
+.find .social { gap: 0.2rem; }
+.find .social li { display: flex; align-items: center; }
+.find .social a { padding: 0.75rem 0.15rem; }
+.find .social li:not(:last-child)::after { content: ","; }
+.find .social li:last-child::before { content: "and"; margin-right: 0.3rem; }
+.find .social li:last-child::after { content: "."; }
+
+
+/* ---------- 8. Footer: copyright, icons, links ---------- */
+footer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "copy   links"
+    "social links";
+  align-items: center;
+  column-gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding-top: var(--space-1);
+  padding-bottom: var(--space-4);
+}
+footer p       { grid-area: copy; margin: 0; }
+footer .social { grid-area: social; margin-left: -0.5rem; }   /* lines the first icon up with the text */
+footer nav     { grid-area: links; }
+
+/* Narrow windows: everything centred, one item per row */
+@media (max-width: 640px) {
+  footer {
+    grid-template-columns: 1fr;
+    grid-template-areas: "copy" "social" "links";
+    justify-items: center;
+    text-align: center;
+  }
+  footer .social { margin-left: 0; }
+  footer nav ul { justify-content: center; }
+}
+
+
+/* ---------- 9. Small helpers ---------- */
+/* "Skip to content" link: visible only when focused with the keyboard */
+.skip { position: absolute; left: -999px; top: var(--space-1); }
+.skip:focus { left: var(--space-2); z-index: 10; padding: 0.5rem 1rem; background: var(--accent); color: var(--bg); text-decoration: none; }
+
+/* Text for screen readers only */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+
+/* ---------- 10. Accessibility and print ---------- */
+@media (prefers-reduced-motion: reduce) {
+  body { animation: none; }
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+
+@media print {
+  :root { color-scheme: light; }
+  body { background: #fff; color: #000; animation: none; }
+  a, h2, main > h1 { color: #000; }
+  .meta, .skills dt { color: #444; }
+  nav, .menu-btn, .social { display: none; }
+}
