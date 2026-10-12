@@ -2,7 +2,7 @@
    Portfolio stylesheet
    Dark and minimal. One font (Ubuntu Mono), one red accent.
    Sections: 1 Settings  2 Base  3 Header  4 Navigation
-             5 Mobile menu  6 Page content  7 Icons  8 Footer
+             5 Phone layout  6 Page content  7 Icons  8 Footer
              9 Small helpers  10 Accessibility and print
    ========================================================== */
 
@@ -80,8 +80,7 @@ a {
   transition: text-decoration-color 0.2s, text-decoration-thickness 0.2s;
 }
 a:hover { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
-a:focus-visible,
-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
 p  { margin: 0 0 0.75rem; }
 h2 { font: 700 var(--text)/1.4 var(--font); color: var(--accent); margin: var(--section-gap) 0 var(--space-2); }
@@ -204,61 +203,64 @@ nav .btn:hover,
 nav .btn:focus-visible { background: var(--accent); color: var(--bg); }
 
 
-/* ---------- 5. Mobile menu (phones, up to 600px wide) ---------- */
-/* The menu button is hidden on large screens */
-.menu-btn {
-  grid-area: btn;
-  display: none;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  margin-right: -0.6rem;      /* lines the icon up with the page edge */
-  padding: 0;
-  background: none;
-  border: 0;
-  color: var(--ink);
-  cursor: pointer;
-}
-.menu-btn:hover { color: var(--accent); }
-.menu-btn svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
-.menu-btn .i-close { display: none; }
-.menu-btn[aria-expanded="true"] .i-close { display: inline; }
-.menu-btn[aria-expanded="true"] .i-open  { display: none; }
+/* ---------- 5. Phone layout ---------- */
+/* No menu button. The navigation bar is always visible:
+   - wide screens:   icon + text  (Home, About, Achievements, Get resume)
+   - small screens:  icon only    (the text stays in the HTML for screen readers) */
 
-@media (max-width: 600px) {
-  :root { --title: 1.25rem; }
-
-  /* photo and name on the first row, menu button on the right, nav below */
+/* Up to 700px: photo and name on the first row, the nav bar on its own row below */
+@media (max-width: 700px) {
   .site {
-    grid-template-columns: auto 1fr auto;
     grid-template-areas:
-      "photo name btn"
-      "nav   nav  nav";
+      "photo name"
+      "nav   nav";
     padding-top: var(--space-3);
     padding-bottom: var(--space-2);
   }
   .name { align-self: center; }
   .site nav { margin-top: var(--space-2); }
-  nav a { padding: 0.5rem var(--space-2) 0.5rem 0; }
+}
 
-  /* With JavaScript: show the button and keep the nav closed until it is tapped.
-     (Without JavaScript the nav simply stays visible.) */
-  .js .menu-btn { display: grid; }
-  .js .site nav { display: none; }
-  .js .site nav.open { display: block; margin-top: var(--space-1); border-top: 1px solid var(--line); }
+@media (max-width: 600px) {
+  :root { --title: 1.25rem; }
+}
 
-  /* Open menu: one big tappable row per page */
-  .js .site nav ul { flex-direction: column; align-items: stretch; }
-  .js .site nav li { display: block; }
-  .js .site nav li + li::before { display: none; }
-  .js .site nav a,
-  .js .site nav li + li a {
-    padding: 0.85rem 0;
-    font-size: var(--text);
-    border-bottom: 1px solid var(--line);
+/* Up to 539px: icons only */
+@media (max-width: 539px) {
+  /* hide the text but keep it for screen readers */
+  .site nav .label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    padding: 0;
+    background: none;
   }
-  .js .site nav li.nav-cta { margin: var(--space-2) 0 var(--space-1); padding: 0; }
-  .js .site nav .btn { padding: 0.85rem 0; text-align: center; border: 1px solid var(--accent); }
+
+  /* bigger icons, each one a comfortable 44px tap target */
+  .site nav a,
+  .site nav li + li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    transition: color 0.2s, box-shadow 0.2s;
+  }
+  .site nav li:first-child a { justify-content: flex-start; padding-left: 0; }   /* first icon lines up with the page edge */
+  .site nav .icon { width: 1.4rem; height: 1.4rem; margin: 0; vertical-align: baseline; }
+  .site nav li.nav-cta { padding-left: var(--space-1); }
+  .site nav .btn { padding: 0.5rem 0.8rem; }
+
+  /* current page and hover: a short bar under the icon (replaces the text underline) */
+  .site nav a:hover,
+  .site nav a:focus-visible { box-shadow: inset 0 -2px 0 currentColor; }
+  .site nav a[aria-current] { box-shadow: inset 0 -2px 0 var(--accent); }
+  .site nav .btn:hover,
+  .site nav .btn:focus-visible { box-shadow: none; }
 }
 
 
@@ -403,5 +405,5 @@ footer nav     { grid-area: links; }
   body { background: #fff; color: #000; animation: none; }
   a, h2, main > h1 { color: #000; }
   .meta, .skills dt { color: #444; }
-  nav, .menu-btn, .social { display: none; }
+  nav, .social { display: none; }
 }
