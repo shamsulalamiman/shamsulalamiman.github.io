@@ -1,9 +1,9 @@
 /* ==========================================================
    Portfolio stylesheet
-   Dark and minimal. One font (Ubuntu Mono), one red accent.
+   Dark and minimal, with a light mode. One font (JetBrains Mono), one rose accent.
    Sections: 1 Settings  2 Base  3 Header  4 Navigation
              5 Phone layout  6 Page content  7 Icons  8 Footer
-             9 Small helpers  10 Accessibility and print  11 Certificate link
+             9 Small helpers  10 Accessibility and print  11 Certificate link  12 Light mode
    ========================================================== */
 
 
@@ -11,29 +11,31 @@
 :root {
   color-scheme: dark;
 
-  --bg: #121212;            /* page background */
-  --ink: #e6e6e6;           /* main text */
-  --soft: #9a9a9a;          /* secondary text (dates, notes) */
-  --line: #2a2a2a;          /* thin divider lines */
-  --accent: #ff6b6b;        /* red: headings, nav, hover */
-  --accent-line: #e5484d;   /* link underline */
+  --bg: #000000;            /* page background: ultra dark (true black) */
+  --ink: #e4e4e4;           /* main text (a touch below pure white, easier on the eyes) */
+  --soft: #8f8f8f;          /* secondary text (dates, notes) */
+  --line: #1f1f1f;          /* thin divider lines */
+  --accent: #d99a9a;        /* rose: headings, nav, hover */
+  --accent-line: #b56b6b;   /* link underline */
+  --maroon: #550000;        /* deep maroon: text selection */
 
-  --font: 'Ubuntu Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
-  --text: 1.0625rem;        /* body text size */
-  --small: 0.9rem;          /* dates, nav */
-  --title: 1.7rem;          /* name and page titles */
+  --text: 1rem;             /* body text size (16px) */
+  --small: 0.875rem;        /* dates, nav (14px) */
+  --title: 1.625rem;        /* name and page titles */
 
   --space-1: 0.5rem;
   --space-2: 1rem;
   --space-3: 1.5rem;
   --space-4: 2rem;
+  --space-5: 3rem;
 
   --gutter: 1.25rem;        /* space at the left and right edge (phones) */
   --photo: 88px;            /* photo size (phones) */
   --measure: 44rem;         /* maximum page width, about 70 characters */
-  --section-gap: 2rem;      /* space above each section heading */
-  --row-gap: 1.25rem;       /* space between list entries */
+  --section-gap: 2.5rem;    /* space above each section heading */
+  --row-gap: 1.5rem;        /* space between list entries */
 }
 
 /* Larger screens get a bigger photo and wider spacing */
@@ -41,8 +43,8 @@
   :root {
     --gutter: 2rem;
     --photo: 112px;
-    --section-gap: 2.5rem;
-    --row-gap: 1.5rem;
+    --section-gap: 3rem;
+    --row-gap: 2rem;
   }
 }
 
@@ -59,7 +61,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font: 400 var(--text)/1.55 var(--font);
+  font: 400 var(--text)/1.65 var(--font);
   animation: fade-in 0.35s ease-out both;
 }
 
@@ -68,7 +70,7 @@ body {
   to   { opacity: 1; }
 }
 
-::selection { background: var(--accent); color: var(--bg); }
+::selection { background: var(--maroon); color: #fff; }
 
 /* Links: the text stays light, only the underline is coloured */
 a {
@@ -82,7 +84,7 @@ a {
 a:hover { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
-p  { margin: 0 0 0.75rem; }
+p  { margin: 0 0 1rem; }
 h2 { font: 700 var(--text)/1.4 var(--font); color: var(--accent); margin: var(--section-gap) 0 var(--space-2); }
 h3 { font: 700 var(--text)/1.4 var(--font); margin: 0 0 0.1rem; }
 
@@ -109,8 +111,8 @@ footer {
     "photo nav";
   column-gap: var(--space-2);
   align-items: center;
-  padding-top: var(--space-4);
-  padding-bottom: var(--space-3);
+  padding-top: var(--space-5);
+  padding-bottom: var(--space-4);
 }
 
 .photo {
@@ -193,20 +195,30 @@ nav a[aria-current] .label { background-image: linear-gradient(var(--accent), va
 nav li.nav-cta { margin-left: auto; padding-left: var(--space-2); }
 nav li.nav-cta::before { display: none; }
 nav .btn {
-  padding: 0.3rem 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2rem;
+  padding: 0 0.6rem;
+  font-size: 0.8125rem;
+  white-space: nowrap;
   border: 1px solid var(--accent);
-  border-radius: 3px;
-  transition: background-color 0.2s, color 0.2s;
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);   /* soft outline */
+  background: color-mix(in srgb, var(--accent) 10%, transparent);     /* faint tint */
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
+nav .btn .icon { width: 0.95em; height: 0.95em; margin: 0; vertical-align: baseline; }
 nav .btn .label { padding: 0; background: none; }
 nav .btn:hover,
-nav .btn:focus-visible { background: var(--accent); color: var(--bg); }
+nav .btn:focus-visible { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 
 
 /* ---------- 5. Phone layout ---------- */
 /* No menu button. The navigation bar is always visible:
    - wide screens:   icon + text  (Home, About, Achievements, Get resume)
-   - small screens:  icon only    (the text stays in the HTML for screen readers) */
+   - small screens:  icon only    (the text stays in the HTML for screen readers),
+     except "Get resume", which always shows its text */
 
 /* Up to 700px: photo and name on the first row, the nav bar on its own row below */
 @media (max-width: 700px) {
@@ -227,8 +239,8 @@ nav .btn:focus-visible { background: var(--accent); color: var(--bg); }
 
 /* Up to 539px: icons only */
 @media (max-width: 539px) {
-  /* hide the text but keep it for screen readers */
-  .site nav .label {
+  /* hide the text of the page links but keep it for screen readers ("Get resume" keeps its text) */
+  .site nav a:not(.btn) .label {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -253,14 +265,30 @@ nav .btn:focus-visible { background: var(--accent); color: var(--bg); }
   .site nav li:first-child a { justify-content: flex-start; padding-left: 0; }   /* first icon lines up with the page edge */
   .site nav .icon { width: 1.4rem; height: 1.4rem; margin: 0; vertical-align: baseline; }
   .site nav li.nav-cta { padding-left: var(--space-1); }
-  .site nav .btn { padding: 0.5rem 0.8rem; }
+  .site nav .btn { min-height: 2.5rem; padding: 0 0.7rem; }
+  .site nav .btn .icon { width: 0.95em; height: 0.95em; margin: 0; }   /* small icon, then the text */
 
-  /* current page and hover: a short bar under the icon (replaces the text underline) */
-  .site nav a:hover,
-  .site nav a:focus-visible { box-shadow: inset 0 -2px 0 currentColor; }
-  .site nav a[aria-current] { box-shadow: inset 0 -2px 0 var(--accent); }
-  .site nav .btn:hover,
-  .site nav .btn:focus-visible { box-shadow: none; }
+  /* current page and hover: a short bar exactly as wide as the icon, directly under it */
+  .site nav a:not(.btn) {
+    background: linear-gradient(currentColor, currentColor) no-repeat center bottom / 0 2px;
+    transition: color 0.2s, background-size 0.2s;
+  }
+  .site nav li:first-child a { background-position: left bottom; }      /* Home icon sits at the page edge, so its bar does too */
+  .site nav a:not(.btn):hover,
+  .site nav a:not(.btn):focus-visible { background-size: 1.4rem 2px; }
+  .site nav a[aria-current] {
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-size: 1.4rem 2px;
+  }
+}
+
+
+/* Very narrow phones (up to 380px): slightly tighter so "Get resume" stays on the same row */
+@media (max-width: 380px) {
+  .site nav a,
+  .site nav li + li a { min-width: 40px; padding-left: 0.5rem; padding-right: 0.5rem; }
+  .site nav li.nav-cta { padding-left: 0.25rem; }
+  .site nav .btn { min-height: 2.5rem; padding: 0 0.55rem; }
 }
 
 
@@ -363,9 +391,9 @@ footer {
     "social links";
   align-items: center;
   column-gap: var(--space-3);
-  margin-top: var(--space-4);
+  margin-top: var(--space-5);
   padding-top: var(--space-1);
-  padding-bottom: var(--space-4);
+  padding-bottom: var(--space-5);
 }
 footer p       { grid-area: copy; margin: 0; }
 footer .social { grid-area: social; margin-left: -0.5rem; }   /* lines the first icon up with the text */
@@ -450,4 +478,62 @@ footer nav     { grid-area: links; }
 
 @media (prefers-reduced-motion: reduce) {
   .cert-link { animation: none; }
+}
+
+
+/* ---------- 12. Light mode and the theme button ---------- */
+/* Light colours. Dark is the default; theme.js adds data-theme="light" to <html>. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #fafafa;
+  --ink: #1c1c1c;
+  --soft: #5c5c5c;
+  --line: #e3e3e3;
+  --accent: #8b1e2d;          /* a deep maroon, so text stays readable on white */
+  --accent-line: #b4545f;
+}
+
+/* colours change smoothly */
+body { transition: background-color 0.25s, color 0.25s; }
+
+/* The theme button: just a small icon, no box.
+   The clickable area is bigger than the icon so it is easy to tap. */
+.site { position: relative; }
+
+.theme-toggle {
+  --box: 36px;                /* clickable area */
+  --glyph: 16px;              /* visible icon */
+  position: absolute;
+  top: var(--space-5);
+  right: calc(max(var(--gutter), env(safe-area-inset-right)) - (var(--box) - var(--glyph)) / 2);
+  display: grid;
+  place-items: center;
+  width: var(--box);
+  height: var(--box);
+  padding: 0;
+  color: var(--soft);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.theme-toggle[hidden] { display: none; }
+.theme-toggle:focus-visible { color: var(--accent); }
+@media (hover: hover) {
+  .theme-toggle:hover { color: var(--accent); }     /* hover colour only where a mouse exists */
+}
+.theme-toggle .icon { width: var(--glyph); height: var(--glyph); }
+
+/* sun in dark mode (click for light), moon in light mode (click for dark) */
+.icon-theme { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/%3E%3C/svg%3E"); }
+:root[data-theme="light"] .icon-theme { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z'/%3E%3C/svg%3E"); }
+
+/* icon for the "Get resume" link (it opens the PDF in a new tab) */
+.icon-resume { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6'/%3E%3C/svg%3E"); }
+
+/* keep the name clear of the button */
+.name { padding-right: 2.5rem; }
+
+@media (max-width: 700px) {
+  .theme-toggle { --box: 44px; top: var(--space-3); }   /* 44px is the comfortable minimum for fingers */
 }
