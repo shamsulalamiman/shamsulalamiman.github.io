@@ -3,20 +3,20 @@
    Dark and minimal, with a light mode. One font (JetBrains Mono), one rose accent.
    Sections: 1 Settings  2 Base  3 Header  4 Navigation
              5 Phone layout  6 Page content  7 Icons  8 Footer
-             9 Small helpers  10 Accessibility and print  11 Certificate link  12 Light mode
+             9 Small helpers  10 Accessibility and print  11 Certificate link  12 Dark mode  13 Resume page
    ========================================================== */
 
 
 /* ---------- 1. Settings: change colours and sizes here ---------- */
 :root {
-  color-scheme: dark;
+  color-scheme: light;      /* light is the default; dark colours are in section 12 */
 
-  --bg: #000000;            /* page background: ultra dark (true black) */
-  --ink: #e4e4e4;           /* main text (a touch below pure white, easier on the eyes) */
-  --soft: #8f8f8f;          /* secondary text (dates, notes) */
-  --line: #1f1f1f;          /* thin divider lines */
-  --accent: #d99a9a;        /* rose: headings, nav, hover */
-  --accent-line: #b56b6b;   /* link underline */
+  --bg: #fafafa;            /* page background */
+  --ink: #1c1c1c;           /* main text */
+  --soft: #5c5c5c;          /* secondary text (dates, notes) */
+  --line: #e3e3e3;          /* thin divider lines */
+  --accent: #8b1e2d;        /* deep maroon: headings, nav, hover */
+  --accent-line: #b4545f;   /* link underline */
   --maroon: #550000;        /* deep maroon: text selection */
 
   --font: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -481,16 +481,16 @@ footer nav     { grid-area: links; }
 }
 
 
-/* ---------- 12. Light mode and the theme button ---------- */
-/* Light colours. Dark is the default; theme.js adds data-theme="light" to <html>. */
-:root[data-theme="light"] {
-  color-scheme: light;
-  --bg: #fafafa;
-  --ink: #1c1c1c;
-  --soft: #5c5c5c;
-  --line: #e3e3e3;
-  --accent: #8b1e2d;          /* a deep maroon, so text stays readable on white */
-  --accent-line: #b4545f;
+/* ---------- 12. Dark mode and the theme button ---------- */
+/* Dark colours (ultra dark). Light is the default; theme.js adds data-theme="dark" to <html>. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #000000;              /* true black */
+  --ink: #e4e4e4;             /* a touch below pure white, easier on the eyes */
+  --soft: #8f8f8f;
+  --line: #1f1f1f;
+  --accent: #d99a9a;          /* soft rose, so text stays readable on black */
+  --accent-line: #b56b6b;
 }
 
 /* colours change smoothly */
@@ -524,9 +524,9 @@ body { transition: background-color 0.25s, color 0.25s; }
 }
 .theme-toggle .icon { width: var(--glyph); height: var(--glyph); }
 
-/* sun in dark mode (click for light), moon in light mode (click for dark) */
-.icon-theme { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/%3E%3C/svg%3E"); }
-:root[data-theme="light"] .icon-theme { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z'/%3E%3C/svg%3E"); }
+/* moon in light mode (click for dark), sun in dark mode (click for light) */
+.icon-theme { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z'/%3E%3C/svg%3E"); }
+:root[data-theme="dark"] .icon-theme { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/%3E%3C/svg%3E"); }
 
 /* icon for the "Get resume" link (it opens the PDF in a new tab) */
 .icon-resume { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6'/%3E%3C/svg%3E"); }
@@ -536,4 +536,18 @@ body { transition: background-color 0.25s, color 0.25s; }
 
 @media (max-width: 700px) {
   .theme-toggle { --box: 44px; top: var(--space-3); }   /* 44px is the comfortable minimum for fingers */
+}
+
+
+/* ---------- 13. Resume page (resume.html) ---------- */
+/* The resume is shown as a picture, so it opens in a tab on every phone and computer
+   (many phones download a PDF instead of showing it). */
+.resume-note { margin: 0 0 var(--space-3); }
+.resume-sheet {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  background: #fff;                  /* paper stays white in dark mode */
+  border: 1px solid var(--line);
 }
